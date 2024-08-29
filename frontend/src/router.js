@@ -2,12 +2,18 @@ import ProductListing from "./views/ProductListing.vue";
 import AuthenticationPage from "./views/AuthenticationPage.vue";
 import RegistrationPage from "./views/RegistrationPage.vue";
 import BucketPage from "./views/BucketPage.vue";
-
+import HomePage from "./views/HomePage.vue";
 import { createRouter, createWebHistory } from 'vue-router'
+
 
 const routes = [
     {
         path: '/',
+        name: 'HomePage',
+        component: HomePage
+    },
+    {
+        path: '/productListing',
         name: 'ProductListing',
         component: ProductListing
     },
