@@ -8,3 +8,10 @@
 *.njsproj
 *.sln
 *.sw?
+.xml
+.md
+.cmd
+target/
+/shelf/
+/workspace.xml
+/backend/src/main/resources/application-secret.properties
