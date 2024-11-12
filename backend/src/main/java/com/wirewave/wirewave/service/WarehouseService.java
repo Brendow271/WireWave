@@ -1,7 +1,7 @@
 package com.wirewave.wirewave.service;
 
-import com.wirewave.wirewave.entity.*;
-import com.wirewave.wirewave.repository.*;
+import com.wirewave.wirewave.entity.Warehouse;
+import com.wirewave.wirewave.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
