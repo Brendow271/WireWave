@@ -1,6 +1,6 @@
 import ProductListing from "./views/ProductListing.vue";
 import AuthenticationPage from "./views/AuthenticationPage.vue";
-import RegistrationPage from "./views/RegistrationPage.vue";
+import RegistrationPage from "./views/Registration/RegistrationPage.vue";
 import BucketPage from "./views/BucketPage.vue";
 import HomePage from "./views/HomePage.vue";
 import { createRouter, createWebHistory } from 'vue-router'
