@@ -13,18 +13,22 @@ public class BasketService {
     @Autowired
     private BasketRepository basketRepository;
 
+    // Получение всех корзин
     public List<Basket> getAllBaskets() {
         return basketRepository.findAll();
     }
 
+    // Получение корзины по ID
     public Basket getBasketById(Integer id) {
         return basketRepository.findById(id).orElse(null);
     }
 
+    // Сохранение новой или обновленной корзины
     public Basket saveBasket(Basket basket) {
         return basketRepository.save(basket);
     }
 
+    // Удаление корзины по ID
     public void deleteBasket(Integer id) {
         basketRepository.deleteById(id);
     }

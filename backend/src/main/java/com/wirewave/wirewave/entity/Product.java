@@ -3,6 +3,8 @@ package com.wirewave.wirewave.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -19,9 +21,48 @@ public class Product {
     private String description;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private BigDecimal price;
 
     @Column(name = "discount_price")
-    private Integer discountPrice;
+    private BigDecimal discountPrice;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public BigDecimal getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(BigDecimal discountPrice) {
+        this.discountPrice = discountPrice;
+    }
 }

@@ -1,7 +1,7 @@
 package com.wirewave.wirewave.service;
 
-import com.wirewave.wirewave.entity.*;
-import com.wirewave.wirewave.repository.*;
+import com.wirewave.wirewave.entity.ProductCategories;
+import com.wirewave.wirewave.repository.ProductCategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +17,15 @@ public class ProductCategoriesService {
         return productCategoriesRepository.findAll();
     }
 
-    public ProductCategories getProductCategoriesById(Integer id) {
+    public ProductCategories getProductCategoryById(Integer id) {
         return productCategoriesRepository.findById(id).orElse(null);
     }
 
-    public ProductCategories saveProductCategories(ProductCategories productCategories) {
+    public ProductCategories saveProductCategory(ProductCategories productCategories) {
         return productCategoriesRepository.save(productCategories);
     }
 
-    public void deleteProductCategories(Integer id) {
+    public void deleteProductCategory(Integer id) {
         productCategoriesRepository.deleteById(id);
     }
 }
