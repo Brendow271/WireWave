@@ -1,4 +1,3 @@
-
 package com.wirewave.wirewave.entity;
 
 import jakarta.persistence.*;
@@ -6,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_user")
@@ -39,22 +39,10 @@ public class User {
     @Size(max = 255)
     private String hashedPassword;
 
-    public void setToken(Integer token) {
-        this.token = token;
-    }
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    // Геттеры и сеттеры
     public Integer getId() {
         return id;
     }
@@ -63,27 +51,64 @@ public class User {
         return token;
     }
 
+    public void setToken(Integer token) {
+        this.token = token;
+    }
+
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getHashedPassword() {
         return hashedPassword;
     }
 
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
+
     public void setPassword(String password) {
         this.hashedPassword = hashPassword(password);
     }
 
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
     private String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public void setUsername(String username) {
+    }
+
+    public String getPassword() {
+    }
+
+    public String getUsername() {
     }
 }
