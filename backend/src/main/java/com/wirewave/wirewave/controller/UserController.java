@@ -1,4 +1,3 @@
-
 package com.wirewave.wirewave.controller;
 
 import com.wirewave.wirewave.entity.User;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -20,6 +20,11 @@ public class UserController {
     // Создание нового пользователя
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+        if (userService.getUserByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        user.setPassword(user.getHashedPassword());
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }
@@ -33,28 +38,30 @@ public class UserController {
 
     // Получение пользователя по ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
     // Обновление данных пользователя
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User userDetails) {
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User userDetails) {
         User user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
 
-        user.setFirstName(userDetails.getFirstName());
-        user.setLastName(userDetails.getLastName());
-        user.setEmail(userDetails.getEmail());
+        if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
+            user.setEmail(userDetails.getEmail());
+        }
 
         if (userDetails.getHashedPassword() != null && !userDetails.getHashedPassword().isEmpty()) {
             user.setPassword(userDetails.getHashedPassword());
         }
 
-        user.setToken(userDetails.getToken());
+        if (userDetails.getRole() != null) {
+            user.setRole(userDetails.getRole());
+        }
 
         User updatedUser = userService.saveUser(user);
         return ResponseEntity.ok(updatedUser);
@@ -62,7 +69,7 @@ public class UserController {
 
     // Удаление пользователя по ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (userService.getUserById(id) == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,4 +78,3 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 }
-
