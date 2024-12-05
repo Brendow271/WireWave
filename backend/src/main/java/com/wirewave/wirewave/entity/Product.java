@@ -26,6 +26,9 @@ public class Product {
     @Column(name = "discount_price")
     private BigDecimal discountPrice;
 
+    @Column(name = "average_rating")
+    private Double averageRating;
+
     public Integer getId() {
         return id;
     }
@@ -65,4 +68,8 @@ public class Product {
     public void setDiscountPrice(BigDecimal discountPrice) {
         this.discountPrice = discountPrice;
     }
+
+    public Double getAverageRating() { return averageRating; }
+
+    public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
 }

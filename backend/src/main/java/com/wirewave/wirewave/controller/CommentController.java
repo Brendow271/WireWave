@@ -2,6 +2,7 @@ package com.wirewave.wirewave.controller;
 
 import com.wirewave.wirewave.entity.Comment;
 import com.wirewave.wirewave.service.CommentService;
+import com.wirewave.wirewave.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,9 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private ProductService productService;
 
     // Получить все комментарии
     @GetMapping
@@ -37,17 +41,11 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    // Получить комментарии по пользователю
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Comment>> getCommentsByUserId(@PathVariable Integer userId) {
-        List<Comment> comments = commentService.getCommentsByUserId(userId);
-        return ResponseEntity.ok(comments);
-    }
-
     // Создать новый комментарий
     @PostMapping
     public ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment) {
         Comment savedComment = commentService.saveComment(comment);
+        productService.updateAverageRating(comment.getProduct().getId());
         return ResponseEntity.ok(savedComment);
     }
 
@@ -64,17 +62,20 @@ public class CommentController {
         comment.setPhoto(commentDetails.getPhoto());
 
         Comment updatedComment = commentService.saveComment(comment);
+        productService.updateAverageRating(comment.getProduct().getId());
         return ResponseEntity.ok(updatedComment);
     }
 
     // Удалить комментарий
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
-        if (commentService.getCommentById(id) == null) {
+        Comment comment = commentService.getCommentById(id);
+        if (comment == null) {
             return ResponseEntity.notFound().build();
         }
 
         commentService.deleteComment(id);
+        productService.updateAverageRating(comment.getProduct().getId());
         return ResponseEntity.noContent().build();
     }
 }
