@@ -25,21 +25,21 @@ public class CommentController {
 
     // Получить комментарий по ID
     @GetMapping("/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
+    public ResponseEntity<Comment> getCommentById(@PathVariable Integer id) {
         Comment comment = commentService.getCommentById(id);
         return comment != null ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
     }
 
     // Получить комментарии по продукту
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Comment>> getCommentsByProductId(@PathVariable Long productId) {
+    public ResponseEntity<List<Comment>> getCommentsByProductId(@PathVariable Integer productId) {
         List<Comment> comments = commentService.getCommentsByProductId(productId);
         return ResponseEntity.ok(comments);
     }
 
     // Получить комментарии по пользователю
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Comment>> getCommentsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<Comment>> getCommentsByUserId(@PathVariable Integer userId) {
         List<Comment> comments = commentService.getCommentsByUserId(userId);
         return ResponseEntity.ok(comments);
     }
@@ -53,7 +53,7 @@ public class CommentController {
 
     // Обновить существующий комментарий
     @PutMapping("/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @Valid @RequestBody Comment commentDetails) {
+    public ResponseEntity<Comment> updateComment(@PathVariable Integer id, @Valid @RequestBody Comment commentDetails) {
         Comment comment = commentService.getCommentById(id);
         if (comment == null) {
             return ResponseEntity.notFound().build();
@@ -69,7 +69,7 @@ public class CommentController {
 
     // Удалить комментарий
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
         if (commentService.getCommentById(id) == null) {
             return ResponseEntity.notFound().build();
         }

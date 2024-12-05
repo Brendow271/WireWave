@@ -17,15 +17,15 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public Comment getCommentById(Long id) {
+    public Comment getCommentById(Integer id) {
         return commentRepository.findById(id).orElse(null);
     }
 
-    public List<Comment> getCommentsByProductId(Long productId) {
+    public List<Comment> getCommentsByProductId(int productId) {
         return commentRepository.findByProductId(productId);
     }
 
-    public List<Comment> getCommentsByUserId(Long userId) {
+    public List<Comment> getCommentsByUserId(Integer userId) {
         return commentRepository.findByUserId(userId);
     }
 
@@ -33,7 +33,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public void deleteComment(Long id) {
+    public void deleteComment(Integer id) {
         commentRepository.deleteById(id);
     }
 }
