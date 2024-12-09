@@ -37,6 +37,16 @@ public class ProductController {
         return product != null ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
     }
 
+    // Получение средней оценки продукта
+    @GetMapping("/{id}/rating")
+    public ResponseEntity<Double> getProductRatingById(@PathVariable Integer id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(product.getAverageRating());
+    }
+
     // Обновление продукта
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @Valid @RequestBody Product productDetails) {
