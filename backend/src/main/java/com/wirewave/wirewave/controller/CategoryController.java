@@ -1,13 +1,18 @@
 package com.wirewave.wirewave.controller;
 
 import com.wirewave.wirewave.entity.Category;
+import com.wirewave.wirewave.entity.Product;
+import com.wirewave.wirewave.repository.CategoryRepository;
+import com.wirewave.wirewave.repository.ProductCategoriesRepository;
 import com.wirewave.wirewave.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -15,6 +20,50 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductCategoriesRepository productCategoriesRepository;
+
+    // Получение всех подкатегорий для заданной категории рекурсивно.
+    @GetMapping("/{categoryId}/subcategories")
+    public ResponseEntity<List<Category>> getAllSubcategories(@PathVariable Integer categoryId) {
+        Set<Category> allSubcategories = new HashSet<>();
+        findSubcategoriesRecursive(categoryId, allSubcategories);
+        return ResponseEntity.ok(new ArrayList<>(allSubcategories));
+    }
+
+    // Получение всех продуктов для заданной категории и всех её подкатегорий.
+    @GetMapping("/{categoryId}/products")
+    public ResponseEntity<List<Product>> getProductsByCategoryAndSubcategories(@PathVariable Integer categoryId) {
+        Set<Category> allSubcategories = new HashSet<>();
+        findSubcategoriesRecursive(categoryId, allSubcategories);
+
+        List<Product> products = allSubcategories.stream()
+                .flatMap(category -> productCategoriesRepository.findByCategory(category).stream())
+                .map(productCategory -> productCategory.getProduct())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(products);
+    }
+
+    // Рекурсивный метод для поиска всех подкатегорий.
+    private void findSubcategoriesRecursive(Integer categoryId, Set<Category> allSubcategories) {
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isPresent()) {
+            allSubcategories.add(category.get());
+
+            List<Category> subcategories = categoryRepository.findSubcategoriesByCategory(category.get());
+            for (Category subcategory : subcategories) {
+                if (!allSubcategories.contains(subcategory)) {
+                    findSubcategoriesRecursive(subcategory.getId(), allSubcategories);
+                }
+            }
+        }
+    }
 
     // Создание новой категории
     @PostMapping
