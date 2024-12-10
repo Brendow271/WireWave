@@ -59,6 +59,7 @@ public class ProductController {
         product.setDescription(productDetails.getDescription());
         product.setPrice(productDetails.getPrice());
         product.setDiscountPrice(productDetails.getDiscountPrice());
+        product.setImageUrl(productDetails.getImageUrl());
 
         Product updatedProduct = productService.saveProduct(product);
         return ResponseEntity.ok(updatedProduct);

@@ -2,7 +2,6 @@ package com.wirewave.wirewave.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -28,6 +27,9 @@ public class Product {
 
     @Column(name = "average_rating")
     private Double averageRating;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     public Integer getId() {
         return id;
@@ -69,7 +71,19 @@ public class Product {
         this.discountPrice = discountPrice;
     }
 
-    public Double getAverageRating() { return averageRating; }
+    public Double getAverageRating() {
+        return averageRating;
+    }
 
-    public void setAverageRating(Double averageRating) { this.averageRating = averageRating; }
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
