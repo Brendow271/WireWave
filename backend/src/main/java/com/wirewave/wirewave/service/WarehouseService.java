@@ -1,5 +1,6 @@
 package com.wirewave.wirewave.service;
 
+import com.wirewave.wirewave.entity.Product;
 import com.wirewave.wirewave.entity.Warehouse;
 import com.wirewave.wirewave.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class WarehouseService {
 
     public void deleteWarehouse(Integer id) {
         warehouseRepository.deleteById(id);
+    }
+
+    public int getTotalStockForProduct(Product product) {
+        return warehouseRepository.findByProduct(product).stream()
+                .mapToInt(Warehouse::getQuantity)
+                .sum();
     }
 }

@@ -2,6 +2,7 @@ package com.wirewave.wirewave.controller;
 
 import com.wirewave.wirewave.entity.Product;
 import com.wirewave.wirewave.service.ProductService;
+import com.wirewave.wirewave.service.WarehouseService; // Импортируем сервис склада
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,20 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private WarehouseService warehouseService;
+
+    @GetMapping("/{id}/stock")
+    public ResponseEntity<Integer> getProductStock(@PathVariable Integer id) {
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        int totalStock = warehouseService.getTotalStockForProduct(product);
+        return ResponseEntity.ok(totalStock);
+    }
 
     // Создание нового продукта
     @PostMapping
