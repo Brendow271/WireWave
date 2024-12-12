@@ -35,9 +35,12 @@ public class CategoryController {
         return ResponseEntity.ok(new ArrayList<>(allSubcategories));
     }
 
-    // Получение всех продуктов для заданной категории и всех её подкатегорий.
+    // Получение всех продуктов для заданной категории и всех её подкатегорий, с возможностью сортировки по цене.
     @GetMapping("/{categoryId}/products")
-    public ResponseEntity<List<Product>> getProductsByCategoryAndSubcategories(@PathVariable Integer categoryId) {
+    public ResponseEntity<List<Product>> getProductsByCategoryAndSubcategories(
+            @PathVariable Integer categoryId,
+            @RequestParam(defaultValue = "asc") String sort) {
+
         Set<Category> allSubcategories = new HashSet<>();
         findSubcategoriesRecursive(categoryId, allSubcategories);
 
@@ -46,6 +49,13 @@ public class CategoryController {
                 .map(productCategory -> productCategory.getProduct())
                 .distinct()
                 .collect(Collectors.toList());
+
+        // asc (по умолчанию) — сортировка по возрастанию цены      desc — сортировка по убыванию цены.
+        if ("desc".equalsIgnoreCase(sort)) {
+            products.sort(Comparator.comparing(Product::getPrice).reversed());
+        } else {
+            products.sort(Comparator.comparing(Product::getPrice));
+        }
 
         return ResponseEntity.ok(products);
     }
