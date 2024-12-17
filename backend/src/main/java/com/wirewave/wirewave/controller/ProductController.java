@@ -1,8 +1,9 @@
 package com.wirewave.wirewave.controller;
 
 import com.wirewave.wirewave.entity.Product;
+import com.wirewave.wirewave.entity.Warehouse;
 import com.wirewave.wirewave.service.ProductService;
-import com.wirewave.wirewave.service.WarehouseService; // Импортируем сервис склада
+import com.wirewave.wirewave.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,13 @@ public class ProductController {
 
     // Создание нового продукта
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, @RequestParam Integer initialQuantity) {
         Product savedProduct = productService.saveProduct(product);
+        Warehouse warehouse = new Warehouse();
+        warehouse.setProduct(savedProduct);
+        warehouse.setQuantity(initialQuantity);
+        warehouseService.saveWarehouse(warehouse);
+
         return ResponseEntity.ok(savedProduct);
     }
 
