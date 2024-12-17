@@ -19,6 +19,11 @@ public class WarehouseController {
     // Создание нового склада
     @PostMapping
     public ResponseEntity<Warehouse> createWarehouse(@Valid @RequestBody Warehouse warehouse) {
+        List<Warehouse> existingWarehouses = warehouseService.getAllWarehouses();
+        if (!existingWarehouses.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
         Warehouse savedWarehouse = warehouseService.saveWarehouse(warehouse);
         return ResponseEntity.ok(savedWarehouse);
     }
