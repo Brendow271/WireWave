@@ -1,14 +1,14 @@
 -- Вставка данных в таблицу app_user
-INSERT INTO app_user (username, email, hash_password, role)
-VALUES ('ivan_ivanov', 'ivan.ivanov@example.com', '$2a$10$7L/1QbOIX6Oz6lM5Qie6fO5LE.o.O2Akxz3DZGty/aCOEBReI95Qm',
+INSERT INTO app_user (first_name, last_name, email, hash_password, role)
+VALUES ('Ivan', 'Ivanov', 'ivan.ivanov@example.com', '$2a$10$7L/1QbOIX6Oz6lM5Qie6fO5LE.o.O2Akxz3DZGty/aCOEBReI95Qm',
         'USER'),
-       ('maria_petrova', 'maria.petrova@example.com', '$2a$10$T.kTQQZlfzB7G.C8L.N9h.M8f/WFY/9t1Fdc9x/9na5jMa7oyQy3m',
+       ('Maria', 'Petrova', 'maria.petrova@example.com', '$2a$10$T.kTQQZlfzB7G.C8L.N9h.M8f/WFY/9t1Fdc9x/9na5jMa7oyQy3m',
         'USER'),
-       ('sergey_sidorov', 'sergey.sidorov@example.com', '$2a$10$yGhBXJ5B79fUN4NLXcNPXuvWxl4UjOjvY3DHQ3KyOZFW0cn8My5re',
-        'USER'),
-       ('anna_kuznetsova', 'anna.kuznetsova@example.com',
+       ('Sergey', 'Sidorov', 'sergey.sidorov@example.com',
+        '$2a$10$yGhBXJ5B79fUN4NLXcNPXuvWxl4UjOjvY3DHQ3KyOZFW0cn8My5re', 'USER'),
+       ('Anna', 'Kuznetsova', 'anna.kuznetsova@example.com',
         '$2a$10$u/6NhjU/7yLzYo7cxOG8a.LQf1ZLxqJLeO1Bf3aPgyxZrE8z58lmu', 'USER')
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (email) DO NOTHING;
 
 -- Вставка данных в таблицу product
 INSERT INTO product (product_name, description, price, discount_price)
@@ -55,25 +55,25 @@ CREATE TABLE IF NOT EXISTS warehouse
 
 -- Вставка данных о количестве товаров в таблицу warehouse
 INSERT INTO warehouse (id_product, quantity)
-VALUES
-    (1, 50),   -- Смартфон Apple iPhone 14
-    (2, 40),   -- Смартфон Apple iPhone 13
-    (3, 30),   -- Смартфон Apple iPhone 12
-    (4, 20),   -- Смартфон Samsung Galaxy S21
-    (5, 25),   -- Смартфон Samsung Galaxy S20
-    (6, 15),   -- Смартфон Samsung Galaxy S8
-    (7, 60),   -- Наушники Apple AirPods Pro
-    (8, 50),   -- Наушники Samsung Galaxy Buds Pro
-    (9, 45),   -- Наушники Sony WH-1000XM4
-    (10, 70),  -- Чехол для Huawei P50
-    (11, 80),  -- Чехол для Samsung Galaxy S21
-    (12, 75),  -- Чехол для Apple iPhone 13
-    (13, 35),  -- Смартфон Huawei P50
-    (14, 40),  -- Смартфон Huawei P40
-    (15, 30),  -- Смартфон Huawei Mate 40
-    (16, 90),  -- Умная колонка Яндекс Станция
-    (17, 65),  -- Портативная колонка JBL Charge 4
-    (18, 55);  -- Портативная колонка Sony SRS-XB43
+VALUES (1, 50),  -- Смартфон Apple iPhone 14
+       (2, 40),  -- Смартфон Apple iPhone 13
+       (3, 30),  -- Смартфон Apple iPhone 12
+       (4, 20),  -- Смартфон Samsung Galaxy S21
+       (5, 25),  -- Смартфон Samsung Galaxy S20
+       (6, 15),  -- Смартфон Samsung Galaxy S8
+       (7, 60),  -- Наушники Apple AirPods Pro
+       (8, 50),  -- Наушники Samsung Galaxy Buds Pro
+       (9, 45),  -- Наушники Sony WH-1000XM4
+       (10, 70), -- Чехол для Huawei P50
+       (11, 80), -- Чехол для Samsung Galaxy S21
+       (12, 75), -- Чехол для Apple iPhone 13
+       (13, 35), -- Смартфон Huawei P50
+       (14, 40), -- Смартфон Huawei P40
+       (15, 30), -- Смартфон Huawei Mate 40
+       (16, 90), -- Умная колонка Яндекс Станция
+       (17, 65), -- Портативная колонка JBL Charge 4
+       (18, 55);
+-- Портативная колонка Sony SRS-XB43
 
 -- Вставка данных в таблицу categories
 INSERT INTO categories (category_name)

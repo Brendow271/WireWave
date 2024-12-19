@@ -1,4 +1,4 @@
-package com.wirewave.wirewave.entity; //app_user
+package com.wirewave.wirewave.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -14,8 +14,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    @NotEmpty
+    @Size(max = 255)
+    private String first_name;
+
+    @Column(nullable = false)
+    @NotEmpty
+    @Size(max = 255)
+    private String last_name;
 
     @Column(nullable = false, unique = true)
     @Email
@@ -26,7 +33,7 @@ public class User {
     @Column(nullable = false)
     @NotEmpty
     @Size(max = 255)
-    private String hashPassword;
+    private String hash_password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -45,12 +52,20 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return first_name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.first_name = firstName;
+    }
+
+    public String getLastName() {
+        return last_name;
+    }
+
+    public void setLastName(String lastName) {
+        this.last_name = lastName;
     }
 
     public String getEmail() {
@@ -62,11 +77,11 @@ public class User {
     }
 
     public String getHashedPassword() {
-        return hashPassword;
+        return hash_password;
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.hashPassword = passwordHash;
+        this.hash_password = passwordHash;
     }
 
     public Role getRole() {
@@ -78,7 +93,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.hashPassword = hashPassword(password);
+        this.hash_password = hashPassword(password);
     }
 
     private String hashPassword(String password) {

@@ -20,7 +20,7 @@ public class UserController {
     // Создание нового пользователя
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        if (userService.getUserByUsername(user.getUsername()).isPresent()) {
+        if (userService.getUserByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(null);
         }
 
@@ -49,6 +49,14 @@ public class UserController {
         User user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        if (userDetails.getFirstName() != null && !userDetails.getFirstName().isEmpty()) {
+            user.setFirstName(userDetails.getFirstName());
+        }
+
+        if (userDetails.getLastName() != null && !userDetails.getLastName().isEmpty()) {
+            user.setLastName(userDetails.getLastName());
         }
 
         if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
