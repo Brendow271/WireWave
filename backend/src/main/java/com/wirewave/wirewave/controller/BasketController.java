@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/baskets")
 public class BasketController {
@@ -16,51 +13,34 @@ public class BasketController {
     @Autowired
     private BasketService basketService;
 
-    // Создание новой корзины
-    @PostMapping
-    public ResponseEntity<Basket> createBasket(@Valid @RequestBody Basket basket) {
-        Basket savedBasket = basketService.saveBasket(basket);
-        return ResponseEntity.ok(savedBasket);
-    }
-
-    // Получение всех корзин
-    @GetMapping
-    public ResponseEntity<List<Basket>> getAllBaskets() {
-        List<Basket> baskets = basketService.getAllBaskets();
-        return ResponseEntity.ok(baskets);
-    }
-
-    // Получение корзины по ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Basket> getBasketById(@PathVariable Integer id) {
-        Basket basket = basketService.getBasketById(id);
+    // Получение корзины пользователя по ID пользователя
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Basket> getBasketByUserId(@PathVariable Integer userId) {
+        Basket basket = basketService.getBasketByUserId(userId);
         return basket != null ? ResponseEntity.ok(basket) : ResponseEntity.notFound().build();
     }
 
-    // Обновление данных корзины
-    @PutMapping("/{id}")
-    public ResponseEntity<Basket> updateBasket(@PathVariable Integer id, @Valid @RequestBody Basket basketDetails) {
-        Basket basket = basketService.getBasketById(id);
-        if (basket == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        basket.setUser(basketDetails.getUser());
-        basket.setOrderPosition(basketDetails.getOrderPosition());
-        basket.setTotalPrice(basketDetails.getTotalPrice());
-
-        Basket updatedBasket = basketService.saveBasket(basket);
-        return ResponseEntity.ok(updatedBasket);
+    // Добавление продукта в корзину
+    @PostMapping("/{basketId}/add-product")
+    public ResponseEntity<Basket> addProductToBasket(@PathVariable Integer basketId,
+                                                     @RequestParam Integer productId,
+                                                     @RequestParam Integer quantity) {
+        Basket updatedBasket = basketService.addProduct(basketId, productId, quantity);
+        return updatedBasket != null ? ResponseEntity.ok(updatedBasket) : ResponseEntity.notFound().build();
     }
 
-    // Удаление корзины по ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBasket(@PathVariable Integer id) {
-        if (basketService.getBasketById(id) == null) {
-            return ResponseEntity.notFound().build();
-        }
+    // Удаление продукта из корзины
+    @DeleteMapping("/{basketId}/remove-product")
+    public ResponseEntity<Basket> removeProductFromBasket(@PathVariable Integer basketId,
+                                                          @RequestParam Integer productId) {
+        Basket updatedBasket = basketService.removeProduct(basketId, productId);
+        return updatedBasket != null ? ResponseEntity.ok(updatedBasket) : ResponseEntity.notFound().build();
+    }
 
-        basketService.deleteBasket(id);
-        return ResponseEntity.noContent().build();
+    // Очистка корзины
+    @DeleteMapping("/{basketId}/clear")
+    public ResponseEntity<Void> clearBasket(@PathVariable Integer basketId) {
+        boolean cleared = basketService.clearBasket(basketId);
+        return cleared ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

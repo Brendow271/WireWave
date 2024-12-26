@@ -10,6 +10,11 @@ VALUES ('Ivan', 'Ivanov', 'ivan.ivanov@example.com', '$2a$10$7L/1QbOIX6Oz6lM5Qie
         '$2a$10$u/6NhjU/7yLzYo7cxOG8a.LQf1ZLxqJLeO1Bf3aPgyxZrE8z58lmu', 'USER')
 ON CONFLICT (email) DO NOTHING;
 
+-- Вставка данных в таблицу basket
+INSERT INTO basket (id, id_user)
+VALUES (1, 1)
+ON CONFLICT DO NOTHING;
+
 -- Вставка данных в таблицу product
 INSERT INTO product (product_name, description, price, discount_price)
 VALUES
@@ -44,14 +49,6 @@ VALUES
     ('Портативная колонка JBL Charge 4', 'Портативная колонка JBL Charge 4 с водонепроницаемым корпусом', 7990, 6990),
     ('Портативная колонка Sony SRS-XB43', 'Портативная колонка Sony SRS-XB43 с Extra Bass', 14990, 12990);
 
--- Создание таблицы warehouse
-CREATE TABLE IF NOT EXISTS warehouse
-(
-    id         SERIAL PRIMARY KEY,
-    product_id INTEGER NOT NULL,
-    quantity   INTEGER NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product (id)
-);
 
 -- Вставка данных о количестве товаров в таблицу warehouse
 INSERT INTO warehouse (id_product, quantity)
@@ -72,8 +69,8 @@ VALUES (1, 50),  -- Смартфон Apple iPhone 14
        (15, 30), -- Смартфон Huawei Mate 40
        (16, 90), -- Умная колонка Яндекс Станция
        (17, 65), -- Портативная колонка JBL Charge 4
-       (18, 55);
--- Портативная колонка Sony SRS-XB43
+       (18, 55) -- Портативная колонка Sony SRS-XB43
+ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу categories
 INSERT INTO categories (category_name)
@@ -85,7 +82,8 @@ VALUES ('Смартфоны'),
        ('Наушники'),
        ('Чехлы'),
        ('Аудиотехника'),
-       ('Портативные колонки');
+       ('Портативные колонки')
+ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу order_position
 INSERT INTO categories_subcategories (id_categories, id_subcategories)
@@ -96,7 +94,8 @@ VALUES (1, 2),
        (5, 6),
        (5, 7),
        (8, 6),
-       (8, 9);
+       (8, 9)
+ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу product_categories
 INSERT INTO product_categories (id_categories, id_product)
@@ -129,14 +128,16 @@ VALUES
     -- Аудиотехника - портативные колонки
     (9, 16),
     (9, 17),
-    (9, 18);
+    (9, 18)
+ON CONFLICT DO NOTHING;
 
 
 -- Вставка данных в таблицу order_position
-INSERT INTO order_position (id_product, quantity)
-VALUES (1, 2),
-       (2, 1),
-       (3, 5);
+INSERT INTO order_position (id_basket, id_product, quantity)
+VALUES (1, 1, 2),
+       (1, 2, 1),
+       (1, 3, 5)
+ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу comment
 INSERT INTO comment (id_product, id_user, estimation, description, photo)
