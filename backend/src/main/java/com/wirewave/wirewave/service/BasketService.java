@@ -86,6 +86,29 @@ public class BasketService {
         return basketRepository.save(basket);
     }
 
+    // Кнопки +/- для изменения количества товаров
+    public Basket updateProductQuantity(Integer basketId, Integer productId, Integer quantity) {
+        Optional<Basket> optionalBasket = basketRepository.findById(basketId);
+        if (optionalBasket.isEmpty()) {
+            return null;
+        }
+
+        Basket basket = optionalBasket.get();
+
+        Optional<OrderPosition> positionOptional = basket.getOrderPositions().stream()
+                .filter(op -> op.getProduct().getId().equals(productId))
+                .findFirst();
+
+        if (positionOptional.isEmpty() || quantity <= 0) {
+            basket.getOrderPositions().removeIf(op -> op.getProduct().getId().equals(productId));
+        } else {
+            OrderPosition position = positionOptional.get();
+            position.setQuantity(quantity);
+        }
+
+        return basketRepository.save(basket);
+    }
+
     // Очистка корзины
     public boolean clearBasket(Integer basketId) {
         Optional<Basket> optionalBasket = basketRepository.findById(basketId);

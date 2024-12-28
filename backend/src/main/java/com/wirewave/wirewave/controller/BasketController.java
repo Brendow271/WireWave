@@ -50,6 +50,15 @@ public class BasketController {
         return ResponseEntity.ok(basket.getTotalPrice());
     }
 
+    // Кнопки +/- для изменения количества товаров
+    @PutMapping("/{basketId}/update-quantity")
+    public ResponseEntity<Basket> updateProductQuantity(@PathVariable Integer basketId,
+                                                        @RequestParam Integer productId,
+                                                        @RequestParam Integer quantity) {
+        Basket updatedBasket = basketService.updateProductQuantity(basketId, productId, quantity);
+        return updatedBasket != null ? ResponseEntity.ok(updatedBasket) : ResponseEntity.notFound().build();
+    }
+
     // Очистка корзины
     @DeleteMapping("/{basketId}/clear")
     public ResponseEntity<Void> clearBasket(@PathVariable Integer basketId) {
