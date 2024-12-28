@@ -28,6 +28,11 @@ public class BasketService {
         return basketRepository.findByUserId(userId);
     }
 
+    // Получение корзины по ID корзины
+    public Basket getBasketById(Integer basketId) {
+        return basketRepository.findById(basketId).orElse(null);
+    }
+
     // Добавление продукта в корзину
     public Basket addProduct(Integer basketId, Integer productId, Integer quantity) {
         Optional<Basket> optionalBasket = basketRepository.findById(basketId);

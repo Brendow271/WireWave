@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/baskets")
 public class BasketController {
@@ -35,6 +37,17 @@ public class BasketController {
                                                           @RequestParam Integer productId) {
         Basket updatedBasket = basketService.removeProduct(basketId, productId);
         return updatedBasket != null ? ResponseEntity.ok(updatedBasket) : ResponseEntity.notFound().build();
+    }
+
+    // Возвращать общую стоимость корзины
+    @GetMapping("/{basketId}/total-price")
+    public ResponseEntity<BigDecimal> getBasketTotalPrice(@PathVariable Integer basketId) {
+        Basket basket = basketService.getBasketById(basketId);
+        if (basket == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(basket.getTotalPrice());
     }
 
     // Очистка корзины

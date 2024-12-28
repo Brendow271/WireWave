@@ -26,7 +26,12 @@ public class Basket {
     @Transient
     public BigDecimal getTotalPrice() {
         return orderPositions.stream()
-                .map(op -> op.getProduct().getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
+                .map(op -> {
+                    BigDecimal productPrice = op.getProduct().getDiscountPrice() != null
+                            ? op.getProduct().getDiscountPrice()
+                            : op.getProduct().getPrice();
+                    return productPrice.multiply(BigDecimal.valueOf(op.getQuantity()));
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
