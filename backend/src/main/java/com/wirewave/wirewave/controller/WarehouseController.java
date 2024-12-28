@@ -57,6 +57,16 @@ public class WarehouseController {
         return ResponseEntity.ok(updatedWarehouse);
     }
 
+    // Проверка статуса наличия товара
+    @GetMapping("/product/{productId}/availability")
+    public ResponseEntity<String> getProductAvailability(@PathVariable Integer productId) {
+        String availabilityStatus = warehouseService.getProductAvailabilityStatus(productId);
+        if (availabilityStatus == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(availabilityStatus);
+    }
+
     // Удаление склада по ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWarehouse(@PathVariable Integer id) {
