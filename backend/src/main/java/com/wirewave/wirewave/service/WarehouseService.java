@@ -31,8 +31,7 @@ public class WarehouseService {
     }
 
     public int getTotalStockForProduct(Product product) {
-        return warehouseRepository.findByProduct(product).stream()
-                .mapToInt(Warehouse::getQuantity)
-                .sum();
+        Warehouse warehouse = warehouseRepository.findByProduct(product);
+        return warehouse != null ? warehouse.getQuantity() : 0;
     }
 }

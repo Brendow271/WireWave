@@ -59,6 +59,13 @@ public class BasketController {
         return updatedBasket != null ? ResponseEntity.ok(updatedBasket) : ResponseEntity.notFound().build();
     }
 
+    // Метод для оформления заказа на основе корзины
+    @PostMapping("/{basketId}/checkout")
+    public ResponseEntity<String> checkout(@PathVariable Integer basketId) {
+        boolean success = basketService.checkoutBasket(basketId);
+        return success ? ResponseEntity.ok("Order placed successfully") : ResponseEntity.badRequest().body("Checkout failed");
+    }
+
     // Очистка корзины
     @DeleteMapping("/{basketId}/clear")
     public ResponseEntity<Void> clearBasket(@PathVariable Integer basketId) {

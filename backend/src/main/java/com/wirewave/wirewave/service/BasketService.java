@@ -3,9 +3,11 @@ package com.wirewave.wirewave.service;
 import com.wirewave.wirewave.entity.Basket;
 import com.wirewave.wirewave.entity.OrderPosition;
 import com.wirewave.wirewave.entity.Product;
+import com.wirewave.wirewave.entity.Warehouse;
 import com.wirewave.wirewave.repository.BasketRepository;
 import com.wirewave.wirewave.repository.OrderPositionRepository;
 import com.wirewave.wirewave.repository.ProductRepository;
+import com.wirewave.wirewave.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class BasketService {
 
     @Autowired
     private OrderPositionRepository orderPositionRepository;
+
+    @Autowired
+    private WarehouseRepository warehouseRepository;
 
     // Получение корзины по ID пользователя
     public Basket getBasketByUserId(Integer userId) {
@@ -108,6 +113,37 @@ public class BasketService {
 
         return basketRepository.save(basket);
     }
+
+    // Проверка корзины на наличие товара на скалде
+    public boolean checkoutBasket(Integer basketId) {
+        Optional<Basket> optionalBasket = basketRepository.findById(basketId);
+        if (optionalBasket.isEmpty()) {
+            return false;
+        }
+
+        Basket basket = optionalBasket.get();
+
+        for (OrderPosition position : basket.getOrderPositions()) {
+            Product product = position.getProduct();
+            int quantity = position.getQuantity();
+
+            Warehouse warehouse = warehouseRepository.findByProduct(product);
+            if (warehouse == null || warehouse.getQuantity() < quantity) {
+                return false;
+            }
+
+            warehouse.setQuantity(warehouse.getQuantity() - quantity);
+            warehouseRepository.save(warehouse);
+        }
+
+        basket.getOrderPositions().clear();
+        basketRepository.save(basket);
+
+        // Добавить логику отправки Email
+
+        return true;
+    }
+
 
     // Очистка корзины
     public boolean clearBasket(Integer basketId) {
