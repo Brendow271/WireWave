@@ -10,12 +10,19 @@ public class OrderPosition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Связь с продуктом
     @ManyToOne
     @JoinColumn(name = "id_product", nullable = false)
     private Product product;
 
+    // Количество товара
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    // Связь с корзиной
+    @ManyToOne
+    @JoinColumn(name = "id_basket", nullable = false)
+    private Basket basket;
 
     public Integer getId() {
         return id;
@@ -39,5 +46,13 @@ public class OrderPosition {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Basket getBasket() {
+        return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
     }
 }

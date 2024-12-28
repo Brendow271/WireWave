@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // Репозиторий для корзин
 public interface BasketRepository extends JpaRepository<Basket, Integer> {
+
+    // Поиск корзины по ID пользователя
+    Basket findByUserId(Integer userId);
 }
