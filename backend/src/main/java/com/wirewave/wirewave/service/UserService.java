@@ -3,6 +3,7 @@ package com.wirewave.wirewave.service;
 import com.wirewave.wirewave.entity.User;
 import com.wirewave.wirewave.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,4 +34,16 @@ public class UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public String hashPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public boolean validatePassword(String rawPassword, String hashedPassword) {
+        return passwordEncoder.matches(rawPassword, hashedPassword);
+    }
+
 }

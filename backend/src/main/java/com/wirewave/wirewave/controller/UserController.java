@@ -4,6 +4,7 @@ import com.wirewave.wirewave.entity.User;
 import com.wirewave.wirewave.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -17,6 +18,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Создание нового пользователя
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
@@ -24,7 +28,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
 
-        user.setPassword(user.getHashedPassword());
+        user.setPassword(user.getHashedPassword(), passwordEncoder);
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
     }
@@ -64,7 +68,7 @@ public class UserController {
         }
 
         if (userDetails.getHashedPassword() != null && !userDetails.getHashedPassword().isEmpty()) {
-            user.setPassword(userDetails.getHashedPassword());
+            user.setPassword(userDetails.getHashedPassword(), passwordEncoder);
         }
 
         if (userDetails.getRole() != null) {
