@@ -6,6 +6,7 @@ import com.wirewave.wirewave.service.ProductService;
 import com.wirewave.wirewave.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -33,6 +34,7 @@ public class ProductController {
     }
 
     // Создание нового продукта
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product, @RequestParam Integer initialQuantity) {
         Product savedProduct = productService.saveProduct(product);
@@ -69,6 +71,7 @@ public class ProductController {
     }
 
     // Обновление продукта
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @Valid @RequestBody Product productDetails) {
         Product product = productService.getProductById(id);
@@ -87,6 +90,7 @@ public class ProductController {
     }
 
     // Удаление продукта по ID
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         if (productService.getProductById(id) == null) {

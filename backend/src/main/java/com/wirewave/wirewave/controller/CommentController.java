@@ -5,6 +5,7 @@ import com.wirewave.wirewave.service.CommentService;
 import com.wirewave.wirewave.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -42,6 +43,7 @@ public class CommentController {
     }
 
     // Создать новый комментарий
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping
     public ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment) {
         Comment savedComment = commentService.saveComment(comment);
@@ -50,6 +52,7 @@ public class CommentController {
     }
 
     // Обновить существующий комментарий
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Integer id, @Valid @RequestBody Comment commentDetails) {
         Comment comment = commentService.getCommentById(id);
@@ -67,6 +70,7 @@ public class CommentController {
     }
 
     // Удалить комментарий
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
         Comment comment = commentService.getCommentById(id);

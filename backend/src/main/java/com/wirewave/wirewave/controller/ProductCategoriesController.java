@@ -4,6 +4,7 @@ import com.wirewave.wirewave.entity.ProductCategories;
 import com.wirewave.wirewave.service.ProductCategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ public class ProductCategoriesController {
     private ProductCategoriesService productCategoriesService;
 
     // Создание новой связи между продуктом и категорией
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductCategories> createProductCategory(@Valid @RequestBody ProductCategories productCategories) {
         ProductCategories savedProductCategory = productCategoriesService.saveProductCategory(productCategories);
@@ -24,6 +26,7 @@ public class ProductCategoriesController {
     }
 
     // Получение всех связей между продуктами и категориями
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<List<ProductCategories>> getAllProductCategories() {
         List<ProductCategories> productCategories = productCategoriesService.getAllProductCategories();
@@ -31,6 +34,7 @@ public class ProductCategoriesController {
     }
 
     // Получение связи по ID
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductCategories> getProductCategoryById(@PathVariable Integer id) {
         ProductCategories productCategory = productCategoriesService.getProductCategoryById(id);
@@ -38,6 +42,7 @@ public class ProductCategoriesController {
     }
 
     // Обновление связи между продуктом и категорией
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductCategories> updateProductCategory(@PathVariable Integer id, @Valid @RequestBody ProductCategories productCategoryDetails) {
         ProductCategories productCategory = productCategoriesService.getProductCategoryById(id);
@@ -53,6 +58,7 @@ public class ProductCategoriesController {
     }
 
     // Удаление связи по ID
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductCategory(@PathVariable Integer id) {
         if (productCategoriesService.getProductCategoryById(id) == null) {

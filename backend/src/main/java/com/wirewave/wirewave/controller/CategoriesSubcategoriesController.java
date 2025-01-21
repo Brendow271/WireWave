@@ -4,6 +4,7 @@ import com.wirewave.wirewave.entity.CategoriesSubcategories;
 import com.wirewave.wirewave.service.CategoriesSubcategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ public class CategoriesSubcategoriesController {
     private CategoriesSubcategoriesService categoriesSubcategoriesService;
 
     // Создание связи между категорией и подкатегорией
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public ResponseEntity<CategoriesSubcategories> createCategoriesSubcategories(@Valid @RequestBody CategoriesSubcategories categoriesSubcategories) {
         CategoriesSubcategories savedCategoriesSubcategories = categoriesSubcategoriesService.saveCategoriesSubcategories(categoriesSubcategories);
@@ -38,6 +40,7 @@ public class CategoriesSubcategoriesController {
     }
 
     // Обновление связи между категорией и подкатегорией
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoriesSubcategories> updateCategoriesSubcategories(@PathVariable Integer id, @Valid @RequestBody CategoriesSubcategories categoriesSubcategoriesDetails) {
         CategoriesSubcategories categoriesSubcategories = categoriesSubcategoriesService.getCategoriesSubcategoriesById(id);
@@ -53,6 +56,7 @@ public class CategoriesSubcategoriesController {
     }
 
     // Удаление связи между категорией и подкатегорией по ID
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoriesSubcategories(@PathVariable Integer id) {
         if (categoriesSubcategoriesService.getCategoriesSubcategoriesById(id) == null) {

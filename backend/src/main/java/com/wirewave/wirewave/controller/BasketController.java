@@ -4,6 +4,7 @@ import com.wirewave.wirewave.entity.Basket;
 import com.wirewave.wirewave.service.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class BasketController {
     private BasketService basketService;
 
     // Получение корзины пользователя по ID пользователя
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<Basket> getBasketByUserId(@PathVariable Integer userId) {
         Basket basket = basketService.getBasketByUserId(userId);
@@ -23,6 +25,7 @@ public class BasketController {
     }
 
     // Добавление продукта в корзину
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/{basketId}/add-product")
     public ResponseEntity<Basket> addProductToBasket(@PathVariable Integer basketId,
                                                      @RequestParam Integer productId,
@@ -32,6 +35,7 @@ public class BasketController {
     }
 
     // Удаление продукта из корзины
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping("/{basketId}/remove-product")
     public ResponseEntity<Basket> removeProductFromBasket(@PathVariable Integer basketId,
                                                           @RequestParam Integer productId) {
@@ -40,6 +44,7 @@ public class BasketController {
     }
 
     // Возвращать общую стоимость корзины
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{basketId}/total-price")
     public ResponseEntity<BigDecimal> getBasketTotalPrice(@PathVariable Integer basketId) {
         Basket basket = basketService.getBasketById(basketId);
@@ -51,6 +56,7 @@ public class BasketController {
     }
 
     // Кнопки +/- для изменения количества товаров
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping("/{basketId}/update-quantity")
     public ResponseEntity<Basket> updateProductQuantity(@PathVariable Integer basketId,
                                                         @RequestParam Integer productId,
@@ -60,6 +66,7 @@ public class BasketController {
     }
 
     // Метод для оформления заказа на основе корзины
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/{basketId}/checkout")
     public ResponseEntity<String> checkout(@PathVariable Integer basketId) {
         boolean success = basketService.checkoutBasket(basketId);
@@ -67,6 +74,7 @@ public class BasketController {
     }
 
     // Очистка корзины
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @DeleteMapping("/{basketId}/clear")
     public ResponseEntity<Void> clearBasket(@PathVariable Integer basketId) {
         boolean cleared = basketService.clearBasket(basketId);

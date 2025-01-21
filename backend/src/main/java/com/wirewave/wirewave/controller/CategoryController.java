@@ -7,6 +7,7 @@ import com.wirewave.wirewave.repository.ProductCategoriesRepository;
 import com.wirewave.wirewave.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -76,6 +77,7 @@ public class CategoryController {
     }
 
     // Создание новой категории
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
         Category savedCategory = categoryService.saveCategory(category);
@@ -97,6 +99,7 @@ public class CategoryController {
     }
 
     // Обновление данных категории
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Integer id, @Valid @RequestBody Category categoryDetails) {
         Category category = categoryService.getCategoryById(id);
@@ -111,6 +114,7 @@ public class CategoryController {
     }
 
     // Удаление категории по ID
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
         if (categoryService.getCategoryById(id) == null) {
