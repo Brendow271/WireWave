@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -42,13 +43,33 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    // Создать новый комментарий
+    // Создать новый комментарий или обновить существующий
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @PostMapping
-    public ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment) {
-        Comment savedComment = commentService.saveComment(comment);
+    @PostMapping("/addOrUpdate")
+    public ResponseEntity<Comment> addOrUpdateComment(@RequestBody @Valid Comment comment) {
+        Optional<Comment> existingComment = commentService.findByUserAndProduct(comment.getUser().getId(), comment.getProduct().getId());
+
+        if (existingComment.isPresent()) {
+            Comment existing = existingComment.get();
+            existing.setEstimation(comment.getEstimation());
+            existing.setDescription(comment.getDescription());
+            existing.setPhoto(comment.getPhoto());
+            commentService.saveComment(existing);
+        } else {
+            commentService.saveComment(comment);
+        }
+
         productService.updateAverageRating(comment.getProduct().getId());
-        return ResponseEntity.ok(savedComment);
+        return ResponseEntity.ok(comment);
+    }
+
+    // Фильтровать комментарии по диапазону оценок
+    @GetMapping("/filter")
+    public ResponseEntity<List<Comment>> filterCommentsByRating(
+            @RequestParam(required = false, defaultValue = "1") Integer minRating,
+            @RequestParam(required = false, defaultValue = "5") Integer maxRating) {
+        List<Comment> comments = commentService.findCommentsByRating(minRating, maxRating);
+        return ResponseEntity.ok(comments);
     }
 
     // Обновить существующий комментарий
