@@ -11,6 +11,7 @@ import com.wirewave.wirewave.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,9 @@ public class BasketService {
 
     @Autowired
     private WarehouseRepository warehouseRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     // Получение корзины по ID пользователя
     public Basket getBasketByUserId(Integer userId) {
@@ -114,7 +118,7 @@ public class BasketService {
         return basketRepository.save(basket);
     }
 
-    // Проверка корзины на наличие товара на скалде
+    // Метод для проверки наличия товаров, уменьшения остатков, очистки корзины и отправки подтверждающего Email
     public boolean checkoutBasket(Integer basketId) {
         Optional<Basket> optionalBasket = basketRepository.findById(basketId);
         if (optionalBasket.isEmpty()) {
@@ -139,7 +143,25 @@ public class BasketService {
         basket.getOrderPositions().clear();
         basketRepository.save(basket);
 
-        // Добавить логику отправки Email
+        // Формируем детали заказа
+        String recipientEmail = basket.getUser().getEmail();
+        String subject = "Ваш заказ успешно оформлен";
+        StringBuilder body = new StringBuilder();
+        body.append("Здравствуйте, ").append(basket.getUser().getFirstName()).append("!\n\n");
+        body.append("Спасибо за ваш заказ. Вот его детали:\n");
+        for (OrderPosition position : basket.getOrderPositions()) {
+            body.append("- ").append(position.getProduct().getProductName())
+                    .append(" x ").append(position.getQuantity())
+                    .append(" = ").append(position.getProduct().getPrice().multiply(BigDecimal.valueOf(position.getQuantity())))
+                    .append(" RUB\n");
+        }
+        body.append("\nОбщая сумма: ").append(basket.getTotalPrice()).append(" RUB\n");
+        body.append("\nС уважением,\nКоманда WireWave");
+
+        emailService.sendOrderEmail(recipientEmail, subject, body.toString());
+        basket.getOrderPositions().clear();
+        basketRepository.save(basket);
+
 
         return true;
     }
