@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentService {
@@ -35,5 +36,15 @@ public class CommentService {
 
     public void deleteComment(Integer id) {
         commentRepository.deleteById(id);
+    }
+
+    // Проверка существующего комментария
+    public Optional<Comment> findByUserAndProduct(Integer userId, Integer productId) {
+        return commentRepository.findByUserIdAndProductId(userId, productId);
+    }
+
+    // Фильтрация комментариев
+    public List<Comment> findCommentsByRating(Integer minRating, Integer maxRating) {
+        return commentRepository.findByEstimationBetween(minRating, maxRating);
     }
 }
