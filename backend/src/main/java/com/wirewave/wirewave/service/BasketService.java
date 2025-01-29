@@ -140,9 +140,6 @@ public class BasketService {
             warehouseRepository.save(warehouse);
         }
 
-        basket.getOrderPositions().clear();
-        basketRepository.save(basket);
-
         // Формируем детали заказа
         String recipientEmail = basket.getUser().getEmail();
         String subject = "Ваш заказ успешно оформлен";
