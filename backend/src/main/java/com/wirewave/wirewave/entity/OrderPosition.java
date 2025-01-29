@@ -1,5 +1,6 @@
 package com.wirewave.wirewave.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +23,7 @@ public class OrderPosition {
     // Связь с корзиной
     @ManyToOne
     @JoinColumn(name = "id_basket", nullable = false)
+    @JsonIgnore
     private Basket basket;
 
     public Integer getId() {

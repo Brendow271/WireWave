@@ -1,5 +1,6 @@
 package com.wirewave.wirewave.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Basket {
     // Пользователь, связанный с корзиной
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
+    @JsonIgnore
     private User user;
 
     // Список позиций заказа, связанных с корзиной
