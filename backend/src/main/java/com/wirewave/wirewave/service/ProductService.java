@@ -1,13 +1,17 @@
 package com.wirewave.wirewave.service;
 
+import com.wirewave.wirewave.entity.Category;
 import com.wirewave.wirewave.entity.Comment;
 import com.wirewave.wirewave.entity.Product;
+import com.wirewave.wirewave.repository.ProductCategoriesRepository;
 import com.wirewave.wirewave.repository.ProductRepository;
 import com.wirewave.wirewave.repository.CommentRepository;
+import com.wirewave.wirewave.entity.ProductCategories;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -17,6 +21,9 @@ public class ProductService {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private ProductCategoriesRepository productCategoriesRepository;
 
     // Получить все продукты
     public List<Product> getAllProducts() {
@@ -50,5 +57,13 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Продукт с ID " + productId + " не найден"));
         product.setAverageRating(averageRating);
         productRepository.save(product);
+    }
+
+    public List<Category> getCategoriesByProduct(Integer productId) {
+        return productCategoriesRepository.findByProductId(productId)
+                .stream()
+                .map(ProductCategories::getCategory)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

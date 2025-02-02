@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface ProductCategoriesRepository extends JpaRepository<ProductCategories, Integer> {
 
+    // Поиск всех продуктов, принадлежащих указанной категории
     List<ProductCategories> findByCategory(Category category);
 
+    // Поиск всех категорий, в которых есть указанный продукт
+    List<ProductCategories> findByProductId(Integer productId);
 }

@@ -10,10 +10,6 @@ VALUES ('Ivan', 'Ivanov', 'ivan.ivanov@example.com', '$2a$10$7L/1QbOIX6Oz6lM5Qie
         '$2a$10$u/6NhjU/7yLzYo7cxOG8a.LQf1ZLxqJLeO1Bf3aPgyxZrE8z58lmu', 'USER')
 ON CONFLICT (email) DO NOTHING;
 
--- Вставка данных в таблицу basket
-INSERT INTO basket (id, id_user)
-VALUES (1, 1)
-ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу product
 INSERT INTO product (product_name, description, price, discount_price)
@@ -131,13 +127,60 @@ VALUES
     (9, 18)
 ON CONFLICT DO NOTHING;
 
-
--- Вставка данных в таблицу order_position
-INSERT INTO order_position (id_basket, id_product, quantity)
-VALUES (1, 1, 2),
-       (1, 2, 1),
-       (1, 3, 5)
+-- Вставка данных в таблицу basket
+INSERT INTO basket (id, id_user)
+VALUES
+    (1, 1),  -- Для пользователя Ivan Ivanov
+    (2, 2),  -- Для пользователя Maria Petrova
+    (3, 3),  -- Для пользователя Sergey Sidorov
+    (4, 4)   -- Для пользователя Anna Kuznetsova
 ON CONFLICT DO NOTHING;
+
+-- -- Вставка данных в таблицу order_position
+INSERT INTO order_position (id_basket, id_product, quantity)
+VALUES
+    -- Корзина 1 (iPhone 14 и AirPods Pro для Ivan Ivanov)
+    (1, 1, 1),  -- iPhone 14
+    (1, 7, 1),  -- AirPods Pro
+
+    -- Корзина 2 (Galaxy S21 и чехол для Samsung Galaxy S21 для Maria Petrova)
+    (2, 4, 1),  -- Galaxy S21
+    (2, 11, 2), -- Чехол для Galaxy S21
+
+    -- Корзина 3 (Huawei P50 для Sergey Sidorov)
+    (3, 13, 1), -- Huawei P50
+
+    -- Корзина 4 (Наушники Sony для Anna Kuznetsova)
+    (4, 9, 1)   -- Sony WH-1000XM4
+ON CONFLICT DO NOTHING;
+
+
+-- Вставка данных в таблицу basket
+INSERT INTO basket (id, id_user)
+VALUES
+    (1, 1),  -- Для пользователя Ivan Ivanov
+    (2, 2),  -- Для пользователя Maria Petrova
+    (3, 3),  -- Для пользователя Sergey Sidorov
+    (4, 4)   -- Для пользователя Anna Kuznetsova
+ON CONFLICT DO NOTHING;
+
+INSERT INTO order_position (id_basket, id_product, quantity)
+VALUES
+    -- Корзина 1 (iPhone 14 и AirPods Pro для Ivan Ivanov)
+    (1, 1, 1),  -- iPhone 14
+    (1, 7, 1),  -- AirPods Pro
+
+    -- Корзина 2 (Galaxy S21 и чехол для Samsung Galaxy S21 для Maria Petrova)
+    (2, 4, 1),  -- Galaxy S21
+    (2, 11, 2), -- Чехол для Galaxy S21
+
+    -- Корзина 3 (Huawei P50 для Sergey Sidorov)
+    (3, 13, 1), -- Huawei P50
+
+    -- Корзина 4 (Наушники Sony для Anna Kuznetsova)
+    (4, 9, 1)   -- Sony WH-1000XM4
+ON CONFLICT DO NOTHING;
+
 
 -- Вставка данных в таблицу comment
 INSERT INTO comment (id_product, id_user, estimation, description, photo)
@@ -147,6 +190,42 @@ VALUES (1, 1, 5, 'Отличный товар, рекомендую!', NULL),
        (1, 4, 5, 'Просто супер! Всем понравилось.', NULL),
        (2, 1, 2, 'Не подошло, много недостатков.', NULL),
        (3, 2, 1, 'Ужасное качество, не советую.', NULL);
+
+INSERT INTO attribute (id, name, type)
+VALUES
+    (1, 'Цвет', 'string'),
+    (2, 'Поддержка 5G', 'boolean'),
+    (3, 'Материал корпуса', 'string')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO product_attribute (product_id, attribute_id, value)
+VALUES
+    -- iPhone 14
+    (1, 1, 'Черный'),  -- Цвет
+    (1, 2, 'true'),    -- Поддержка 5G
+    (1, 3, 'Стекло'),  -- Материал корпуса
+
+    -- iPhone 13
+    (2, 1, 'Белый'),
+    (2, 2, 'true'),
+    (2, 3, 'Стекло'),
+
+    -- Samsung Galaxy S21
+    (4, 1, 'Синий'),
+    (4, 2, 'true'),
+    (4, 3, 'Металл'),
+
+    -- Huawei P50
+    (13, 1, 'Золотой'),
+    (13, 2, 'false'),
+    (13, 3, 'Керамика'),
+
+    -- JBL Charge 4
+    (17, 1, 'Черный'),
+    (17, 2, 'false'),
+    (17, 3, 'Керамика')
+ON CONFLICT DO NOTHING;
+
 
 UPDATE app_user
 SET role = 'ADMIN'
