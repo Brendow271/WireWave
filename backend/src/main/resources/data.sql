@@ -7,9 +7,15 @@ VALUES ('Ivan', 'Ivanov', 'ivan.ivanov@example.com', '$2a$10$7L/1QbOIX6Oz6lM5Qie
        ('Sergey', 'Sidorov', 'sergey.sidorov@example.com',
         '$2a$10$yGhBXJ5B79fUN4NLXcNPXuvWxl4UjOjvY3DHQ3KyOZFW0cn8My5re', 'USER'),
        ('Anna', 'Kuznetsova', 'anna.kuznetsova@example.com',
-        '$2a$10$u/6NhjU/7yLzYo7cxOG8a.LQf1ZLxqJLeO1Bf3aPgyxZrE8z58lmu', 'USER')
+        '$2a$10$u/6NhjU/7yLzYo7cxOG8a.LQf1ZLxqJLeO1Bf3aPgyxZrE8z58lmu', 'USER'),
+       ('John', 'Doe', 'johndoe@example.com',
+        '$2a$10$gSBRgLZG4PZMsUIIwrV4COh04C.TPmoL9HzoLHHqQPVQSe467JjqC', 'USER')
 ON CONFLICT (email) DO NOTHING;
 
+
+UPDATE app_user
+SET role = 'ADMIN'
+WHERE email = 'johndoe@example.com';
 
 -- Вставка данных в таблицу product
 INSERT INTO product (product_name, description, price, discount_price)
@@ -65,7 +71,7 @@ VALUES (1, 50),  -- Смартфон Apple iPhone 14
        (15, 30), -- Смартфон Huawei Mate 40
        (16, 90), -- Умная колонка Яндекс Станция
        (17, 65), -- Портативная колонка JBL Charge 4
-       (18, 55) -- Портативная колонка Sony SRS-XB43
+       (18, 55)  -- Портативная колонка Sony SRS-XB43
 ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу categories
@@ -129,11 +135,10 @@ ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу basket
 INSERT INTO basket (id, id_user)
-VALUES
-    (1, 1),  -- Для пользователя Ivan Ivanov
-    (2, 2),  -- Для пользователя Maria Petrova
-    (3, 3),  -- Для пользователя Sergey Sidorov
-    (4, 4)   -- Для пользователя Anna Kuznetsova
+VALUES (1, 1), -- Для пользователя Ivan Ivanov
+       (2, 2), -- Для пользователя Maria Petrova
+       (3, 3), -- Для пользователя Sergey Sidorov
+       (4, 4)  -- Для пользователя Anna Kuznetsova
 ON CONFLICT DO NOTHING;
 
 -- -- Вставка данных в таблицу order_position
@@ -157,11 +162,10 @@ ON CONFLICT DO NOTHING;
 
 -- Вставка данных в таблицу basket
 INSERT INTO basket (id, id_user)
-VALUES
-    (1, 1),  -- Для пользователя Ivan Ivanov
-    (2, 2),  -- Для пользователя Maria Petrova
-    (3, 3),  -- Для пользователя Sergey Sidorov
-    (4, 4)   -- Для пользователя Anna Kuznetsova
+VALUES (1, 1), -- Для пользователя Ivan Ivanov
+       (2, 2), -- Для пользователя Maria Petrova
+       (3, 3), -- Для пользователя Sergey Sidorov
+       (4, 4)  -- Для пользователя Anna Kuznetsova
 ON CONFLICT DO NOTHING;
 
 INSERT INTO order_position (id_basket, id_product, quantity)
@@ -187,23 +191,33 @@ INSERT INTO comment (id_product, id_user, estimation, description, photo)
 VALUES (1, 1, 5, 'Отличный товар, рекомендую!', NULL),
        (2, 2, 4, 'Хороший товар, но мог бы быть лучше.', NULL),
        (3, 3, 3, 'Средний продукт, ожидал большего.', NULL),
-       (1, 4, 5, 'Просто супер! Всем понравилось.', NULL),
+       (1, 4, 4, 'Просто супер! Всем понравилось.', NULL),
        (2, 1, 2, 'Не подошло, много недостатков.', NULL),
-       (3, 2, 1, 'Ужасное качество, не советую.', NULL);
+       (3, 2, 2, 'Ужасное качество, не советую.', NULL);
+
+-- Обновление средней оценки продуктов после вставки отзывов
+UPDATE product p
+SET average_rating = (
+    SELECT AVG(c.estimation)
+    FROM comment c
+    WHERE c.id_product = p.id
+)
+WHERE EXISTS (
+    SELECT 1 FROM comment c WHERE c.id_product = p.id
+);
 
 INSERT INTO attribute (id, name, type)
-VALUES
-    (1, 'Цвет', 'string'),
-    (2, 'Поддержка 5G', 'boolean'),
-    (3, 'Материал корпуса', 'string')
+VALUES (1, 'Цвет', 'string'),
+       (2, 'Поддержка 5G', 'boolean'),
+       (3, 'Материал корпуса', 'string')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO product_attribute (product_id, attribute_id, value)
 VALUES
     -- iPhone 14
-    (1, 1, 'Черный'),  -- Цвет
-    (1, 2, 'true'),    -- Поддержка 5G
-    (1, 3, 'Стекло'),  -- Материал корпуса
+    (1, 1, 'Черный'), -- Цвет
+    (1, 2, 'true'),   -- Поддержка 5G
+    (1, 3, 'Стекло'), -- Материал корпуса
 
     -- iPhone 13
     (2, 1, 'Белый'),
@@ -226,7 +240,3 @@ VALUES
     (17, 3, 'Керамика')
 ON CONFLICT DO NOTHING;
 
-
-UPDATE app_user
-SET role = 'ADMIN'
-WHERE email = 'bobbrown@example.com';
