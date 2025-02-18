@@ -1,6 +1,8 @@
 package com.wirewave.wirewave.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wirewave.wirewave.config.JwtAuthenticationFilter;
+import com.wirewave.wirewave.config.JwtUtil;
 import com.wirewave.wirewave.config.SecurityConfiguration;
 import com.wirewave.wirewave.entity.Attribute;
 import com.wirewave.wirewave.entity.ProductAttribute;
@@ -19,7 +21,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +46,12 @@ class AttributeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private Attribute attribute;
     private ProductAttribute productAttribute;
@@ -77,7 +85,7 @@ class AttributeControllerTest {
     // Тест на получение всех характеристик
     @Test
     void shouldGetAllAttributes() throws Exception {
-        List<Attribute> attributes = Arrays.asList(attribute);
+        List<Attribute> attributes = Collections.singletonList(attribute);
         Mockito.when(attributeService.getAllAttributes()).thenReturn(attributes);
 
         mockMvc.perform(get("/api/attributes"))

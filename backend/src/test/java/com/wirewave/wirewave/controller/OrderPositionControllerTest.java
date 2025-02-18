@@ -2,6 +2,7 @@ package com.wirewave.wirewave.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wirewave.wirewave.config.JwtAuthenticationFilter;
+import com.wirewave.wirewave.config.JwtUtil;
 import com.wirewave.wirewave.config.SecurityConfiguration;
 import com.wirewave.wirewave.entity.OrderPosition;
 import com.wirewave.wirewave.service.OrderPositionService;
@@ -44,6 +45,12 @@ class OrderPositionControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private OrderPosition orderPosition;
 

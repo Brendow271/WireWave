@@ -1,6 +1,8 @@
 package com.wirewave.wirewave.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wirewave.wirewave.config.JwtAuthenticationFilter;
+import com.wirewave.wirewave.config.JwtUtil;
 import com.wirewave.wirewave.config.SecurityConfiguration;
 import com.wirewave.wirewave.entity.CategoriesSubcategories;
 import com.wirewave.wirewave.service.CategoriesSubcategoriesService;
@@ -43,6 +45,12 @@ class CategoriesSubcategoriesControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private CategoriesSubcategories categoriesSubcategories;
 

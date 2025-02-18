@@ -2,6 +2,7 @@ package com.wirewave.wirewave.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wirewave.wirewave.config.JwtAuthenticationFilter;
+import com.wirewave.wirewave.config.JwtUtil;
 import com.wirewave.wirewave.config.SecurityConfiguration;
 import com.wirewave.wirewave.entity.Warehouse;
 import com.wirewave.wirewave.service.WarehouseService;
@@ -40,14 +41,17 @@ class WarehouseControllerTest {
     @MockBean
     private WarehouseService warehouseService;
 
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private Warehouse warehouse;
 
