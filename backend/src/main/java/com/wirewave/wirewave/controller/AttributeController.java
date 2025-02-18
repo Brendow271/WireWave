@@ -6,7 +6,15 @@ import com.wirewave.wirewave.service.AttributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -17,10 +25,16 @@ public class AttributeController {
     @Autowired
     private AttributeService attributeService;
 
+    // Обработчик ошибок (если атрибут не найден или другие ошибки)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.status(500).body("{\"message\":\"" + ex.getMessage() + "\"}");
+    }
+
     // Создать новую характеристику
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Attribute> createAttribute(@RequestBody Attribute attribute) {
+    public ResponseEntity<Attribute> createAttribute(@Valid @RequestBody Attribute attribute) {
         Attribute createdAttribute = attributeService.createAttribute(attribute);
         return ResponseEntity.ok(createdAttribute);
     }
